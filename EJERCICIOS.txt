@@ -1,0 +1,46 @@
+/******************************************************************************
+Morel, Melany Lucía. 
+
+Clase 01, ejercicio 1.
+1- Crear la colección alumnos 
+*******************************************************************************/
+use Clase01
+db.createCollection("Alumnos")
+
+/******************************************************************************
+Morel, Melany Lucía
+Clase 01, ejercicio 02.
+2- Cargar con diez alumnos esa colección
+*******************************************************************************/
+db.Alumnos.insert([{legajo:1,nombre:"Alan"},{legajo:2,nombre:"Lucas"},{legajo:3,nombre:"Lucia"},{legajo:4,nombre:"Florencia"},{legajo:5,nombre:"Demian"},{legajo:6,nombre:"Gabriela"},{legajo:7,nombre:"Sofia"},{legajo:8,nombre:"Valentin"},{legajo:9,nombre:"Marcos"},{legajo:10,nombre:"Elias"}])
+
+/******************************************************************************
+Morel, Melany Lucía
+Clase 01, ejercicio 03.
+3- Crear la colección Materias
+*******************************************************************************/
+db.createCollection("Materias")
+
+/******************************************************************************
+Morel, Melany Lucía
+Clase 01, ejercicio 04.
+4- Cargar con 4 materias esta colección
+*******************************************************************************/
+db.Materias.insert([{cod:1,descr:"Matematica 2"},{cod:2,descr:"Base de datos 2"},{cod:3,descr:"Laboratorio 5"},{cod:4,descr:"Ingles avanzado"}])
+
+/******************************************************************************
+Morel, Melany Lucía
+Clase 02 Ejercicio find() para encontrar por nombre
+*******************************************************************************/
+app.get("/usuarios/listar/:nombre", (req, res) => {
+  let arrayUsu = [];
+  let nombre = req.params.nombre;
+  db.collection('users').find({"usuario": nombre}).forEach(item => {
+    arrayUsu.push(item);
+  }, err => {
+    if(err){
+      console.log(err);
+    }
+    res.json(arrayUsu);
+  })
+});
