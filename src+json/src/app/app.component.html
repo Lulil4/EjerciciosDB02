@@ -1,0 +1,23 @@
+
+<div>
+  <nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a href="#" class="navbar-brand">Angular + Firebase</a>
+    <div class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a routerLink="chat" class="nav-link">chat</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="listadoFireStore" class="nav-link">listadoFireStore</a>
+      </li>
+      <li class="nav-item">
+        <a routerLink="listadoRealtime" class="nav-link">listadoRealtime</a>
+      </li>
+    </div>
+  </nav>
+  <h1> mi chat</h1> 
+  <div class="container mt-3">
+    <h2>{{ title }}</h2>
+    <router-outlet></router-outlet>
+  </div>
+</div>
+
