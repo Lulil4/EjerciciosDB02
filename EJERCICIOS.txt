@@ -44,3 +44,167 @@ app.get("/usuarios/listar/:nombre", (req, res) => {
     res.json(arrayUsu);
   })
 });
+
+------------------------------------------------
+1.Buscar cuántas películas tiene título “La bella y la bestia”
+*******************************************************************************/
+use films1
+db.films.find(title:"La bella y la bestia").count()
+/********************************************************************************
+2. Buscar cuántas películas son solo para adultos
+*******************************************************************************/
+db.films.find({adult:true}).count()
+/********************************************************************************
+3. Buscar cuántas películas tiene más de 1000 votos
+*******************************************************************************/
+db.films.find({vote_count: {$gt: 1000}}).count()
+/********************************************************************************
+4. Buscar cuántas películas no son video
+*******************************************************************************/
+db.films.find({video:false}).count()
+/********************************************************************************
+5. Buscar cuántas películas no son en inglés
+*******************************************************************************/
+db.films.find({original_language: {$ne : "en"} }).count()
+/********************************************************************************
+6. Buscar cuántas películas tienen menos de 5 puntos de promedio(vote_average)
+*******************************************************************************/
+db.films.find({vote_average: {$lt : 5} }).count()
+/********************************************************************************
+7. Buscar cuántas películas No son para adultos y tienen menos de 1000 votos
+*******************************************************************************/
+db.films.find({$and:[{ adult:false }, {vote_count: {$lt: 1000}}]}).count()
+/********************************************************************************
+8. Buscar cuántas películas tienen más de 5 puntos de promedio(vote_average) y
+menos de 1000 votos
+*******************************************************************************/
+db.films.find({$and:[{vote_count:{$lt:1000}}, {vote_average: {$gt: 5}}]}).count()
+/********************************************************************************
+9. Buscar cuántas películas son en ingles y tienen menos de 5 puntos de
+promedio(vote_average)
+*******************************************************************************/
+db.films.find({$and:[{original_language: "en"}, {vote_average: {$lt: 5}}]}).count()
+/********************************************************************************
+10. Buscar cuántas películas no son en inglés, tienen más de 1000 votos y un promedio
+menor a 5. 
+*******************************************************************************/
+db.films.find({$and:[{original_language: {$ne : "en"}}, {vote_average: {$lt: 5}}, {vote_count:{$gt:1000}}]}).count()
+/********************************************************************************
+11. Buscar cuántas películas tienen el genre_ids = 16
+*******************************************************************************/
+db.films.find({genre_ids:16}).count() // lo tiene dentro del array. o {genre_ids: [16]} me trae solo los que tienen 16 en el array me parece. {$in:[16]} lo tiene dentro del array
+/********************************************************************************
+12. Buscar cuántas películas no tienen el genre_ids = 16
+*******************************************************************************/
+db.films.find({genre_ids: {$ne : 16}}).count()
+
+------------------------- AND OR NOT
+
+1. Buscar cuántas películas tiene el ID mayor a 10 y menor a 1000 : 740
+*******************************************************************************/
+    db.films.find({$and:[{id:{$gt:10}}, {id:{$lt:1000}}]}).count()
+/*****************************************************************************
+* 2. Buscar cuántas películas tiene el ID mayor a 10 y menor a 1000 y no son en francés. : 696
+* *******************************************************************************/
+    db.films.find({$and:[{id:{$gt:10}}, {id:{$lt:1000}}, {original_language: {$not:{$eq:"fr"}}}]}).count()
+/*****************************************************************************
+* 3.  Buscar cuántas películas tiene el ID mayor a 10 y menor a 1000 y no son en japonés (“ja”). : 726
+* *******************************************************************************/
+     db.films.find({$and:[{id:{$gt:10}}, {id:{$lt:1000}}, {original_language: {$not:{$eq:"ja"}}}]}).count()
+/*****************************************************************************
+* 4. Buscar cuántas películas tiene el ID mayor a 10 y menor a 1000 y con un promedio de menor a 5 : 8
+* *******************************************************************************/
+    db.films.find({$and:[{id:{$gt:10}}, {id:{$lt:1000}}, {vote_average: {$lt:5}}]}).count() !!!!!!!!!!!!!!!!!!!!REVISAR
+/*****************************************************************************
+* 5. Buscar cuántas películas tiene el release_date “1991-11-12” o “2014-02-12” : 5
+* *******************************************************************************/
+    db.films.find({$or:[{release_date:"1991-11-12"},{release_date:"2014-02-12"}]}).count()
+/*****************************************************************************
+* 6. Buscar cuántas películas tiene el release_date “1991-11-12” o “2014-02-12” y no esta en ingles. : 2
+* *******************************************************************************/
+   db.films.find({$and:[{$or:[{release_date:"1991-11-12"},{release_date:"2014-02-12"}]},{original_language: {$not:{$eq:"en"}}}]}).count()
+/*****************************************************************************
+*7. Buscar cuántas películas tiene el más de 2000 votos o menos de 5 de vote_average : 17114
+* *******************************************************************************/
+ db.films.find({$or:[{vote_count:{$gt:2000}},{vote_average:{$lt:5}}]}).count()
+/*****************************************************************************
+*8. Buscar cuántas películas NO tiene el más de 2000 votos o menos de 5 de vote_average : 33580
+* *******************************************************************************/
+ db.films.find({$or:[{vote_count:{$not:{$gt:2000}}},{vote_average:{$lt:5}}]}).count()
+/*****************************************************************************
+*9. Buscar cuántas películas tiene el más de 2000 votos o menos de 5 de vote_average y NO son en frances : 16552
+* *******************************************************************************/
+ db.films.find({$and:[{$or:[{vote_count:{$gt:2000}},{vote_average:{$lt:5}}]},{original_language:{$not:{$eq:"fr"}}}]}).count()
+/*****************************************************************************
+*10. Buscar cuántas películas tiene más de 2000 votos o menos de 5 de vote_average y son en francés. : 562
+* *******************************************************************************/
+ db.films.find({$and:[{$or:[{vote_count:{$gt:2000}},{vote_average:{$lt:5}}]},{original_language: "fr"}]}).count()
+ 
+ 
+ 
+ ---------------------------UPDATE CLASE 04
+
+/******************************************************************************
+Morel, Melany Lucía. Clase 04: UPDATE. Poner modificados.
+*******************************************************************************/
+
+/******************************************************************************
+1. Agregar a todos los países el campo infectados con el número 100: 250
+*******************************************************************************/
+db.paises.updateMany({},{$set:{"infectados":100}}) 
+/******************************************************************************
+2. Agregar a los países de suramérica el campo faltan dosis en true : 15
+*******************************************************************************/
+db.paises.updateMany({"subregion":"South America"},{$set:{"faltanDosis":true}}) 
+/******************************************************************************
+3. Agregar todos los países en sus moneda(currencies) al bitcoin con el símbolo b$b : 250
+*******************************************************************************/
+db.paises.updateMany({},{$push:{"currencies":{"name":"bitcoin", "symbol":"b$b"}}}) 
+/******************************************************************************
+4. Agregar a todos los países de europa la frontera(borders) con china(chn) : 53
+*******************************************************************************/
+db.paises.updateMany({"region":"Europe"},{$push:{"borders":"CHN"}}) 
+/******************************************************************************
+ 5. Agregar a todos los países de suramérica la el “languages” “brasilero” con sus correspondientes ISO : 15
+*******************************************************************************/
+db.paises.updateMany({"subregion":"South America"},{$push:{"languages":{"name":"brasilero",  "iso639_1" : "pt", "iso639_2" : "por"}}}) 
+/******************************************************************************
+6. cambiar el nombre del campo demonym por denominacion. : 250
+*******************************************************************************/
+db.paises.updateMany({},{$rename:{"demonym":"denominacion"}})
+/******************************************************************************
+7. borrar el campo faltan dosis. : 15
+*******************************************************************************/
+db.paises.updateMany({},{$unset:{"faltanDosis":""}})
+/******************************************************************************
+8. multiplicar el número de infectados por 4 en toda europa : 53
+*******************************************************************************/
+db.paises.updateMany({"region":"Europe"},{$mul:{"infectados":4}})
+/******************************************************************************
+9. multiplicar el número de infectados por 2.5 en toda américa : 57
+*******************************************************************************/
+db.paises.updateMany({"region":"America"},{$mul:{"infectados":2.5}})
+/******************************************************************************
+10. modificar el minimo mundial a 150 infectados por país : 110
+*******************************************************************************/
+db.paises.updateMany({},{$min:{"infectados":150}})
+/******************************************************************************
+11. modificar el maximo mundial a 350 infectados por país : 250
+*******************************************************************************/
+db.paises.updateMany({},{$max:{"infectados":350}})
+/******************************************************************************
+12. reducir la población de toda américa en un 50 % : 57
+*******************************************************************************/
+db.paises.updateMany({"region":"Americas"},{$mul:{"population":0.5}}) 
+/******************************************************************************
+13. sumarle 10.000.000 a la población de toda europa. : 53
+*******************************************************************************/
+db.paises.updateMany({"region":"Europe"},{$inc:{"population":10000000}}) 
+/******************************************************************************
+14. cambiar a la capital de argentina a viedma de patagones. : 1
+*******************************************************************************/
+db.paises.updateOne({"name":"Argentina"},{$set:{"capital":"Viedma de Patagones"}}) 
+/******************************************************************************
+15. agregar a regionalBlocks “mercosur “ para toda américa : 57
+*******************************************************************************/
+db.paises.updateMany({"region":"Americas"},{$push:{"regionalBlocs":{"name":"mercosur"}}}) 
