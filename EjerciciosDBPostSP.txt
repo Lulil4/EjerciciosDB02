@@ -1,0 +1,55 @@
+/******************************************************************************
+Ejercicios Aggregate
+Morel, Melany Lucía
+
+1. (Peliculas) Encontrar todas las películas cuyo lenguaje sea italiano ‘it’.
+*******************************************************************************/
+db.films.aggregate([{$match: {original_language : "it"}}, {$project: {original_title: 1, original_language : 1}}]).pretty()
+
+/******************************************************************************
+ * 2. Encontrar todas las películas cuyo lenguaje sea italiano ‘it’ y la popularidad mayor a 7
+ ********************************************************************************/
+ db.films.aggregate([{$match: {$and: [{original_language : "it", popularity: {$gt: 7}}]}}, {$project: {original_title: 1, original_language : 1, popularity: 1}}]).pretty()
+ /******************************************************************************
+ * 3. Encontrar todas las películas cuyo lenguaje sea italiano ‘it’, popularidad mayor a 12 y mostrar el _id, title, vote_average y cast.
+ ********************************************************************************/
+  db.films.aggregate([{$match: {$and: [{original_language : "it", popularity: {$gt: 12}}]}}, {$project: {_id: 1, title: 1, vote_average: 1, cast: 1}}]).pretty()
+ /******************************************************************************
+ * 4. Sumar al punto anterior un campo que se llame votos que contenga la cantidad devotos.
+ ********************************************************************************/
+   db.films.aggregate([{$match: {$and: [{original_language : "it", popularity: {$gt: 12}}]}}, {$project: {_id: 1, title: 1, vote_average: 1, cast: 1, "votos": "$vote_count"}}]).pretty()
+  /******************************************************************************
+ * 5. Repetir la búsqueda anterior, pero restringir el array cast a los tres primeros elementos.
+ ********************************************************************************/
+ db.films.aggregate([{$match: {$and: [{original_language : "it", popularity: {$gt: 12}}]}}, {$project: {_id: 1, title: 1, vote_average: 1, cast:{$slice:["$cast",3]}, "votos": "$vote_count"}}]).pretty()
+ /******************************************************************************
+ * 6. Repetir la búsqueda anterior, pero mostrar cuatro elementos a partir de la tercera posición
+ ********************************************************************************/
+ db.films.aggregate([{$match: {$and: [{original_language : "it", popularity: {$gt: 12}}]}}, {$project: {_id: 1, title: 1, vote_average: 1, cast:{$slice:["$cast", 3, 4]}, "votos": "$vote_count"}}]).pretty()
+ /******************************************************************************
+ * 7. Mostrar todas las películas en idioma espanol, mostrando el t
+ ********************************************************************************/
+ db.films.aggregate([{$match: {original_language : "es"}}, {$project: {title: 1, original_language : 1}}]).pretty()
+  /******************************************************************************
+ * 8. Mostrar el _id, title, y crear un campo de nombre cantidad con la cantidad de elementos en el array cast de las peliculas en espanol.
+ ********************************************************************************/
+  db.films.aggregate([{$match: {original_language : "es"}}, {$project: {_id : 1, title: 1, "cantidad": {$size: "$cast"}}}]).pretty()
+  
+  db.films.aggregate([{$match:{original_language:"es"}},{$project:{_id:1,title:1,cantidad:{$size:"$cast"}}}]).pretty();
+  /******************************************************************************
+ * 9. Buscar la película con _id 58fa4a7799315a42d17d2b50 y mostrar, el titulo, original_title, actor con el valor de cast.name y personaje con el valor de
+  cast.character de cada elemento del array cast. Mostrar un documento por cada elemento que contenga el array.
+ ********************************************************************************/
+   db.films.aggregate([{$match: {_id : ObjectId("58fa4a7799315a42d17d2b50")}}, {$unwind: "$cast"}, {$project: {title: 1, original_title: 1, "actor": "$cast.name", "personaje":"$cast.character"}}]).pretty()
+   /******************************************************************************
+ * 10. Mostrar el nombre de todos los actores que interpretaron a Stormtrooper y la película.
+ ********************************************************************************/
+ db.films.aggregate([{$unwind: "$cast"}, {$match: {"cast.character" : "Stormtrooper"}},  {$project: {original_title: 1, "actor": "$cast.name", "personaje":"$cast.character"}},{$sort: { actor: 1} }]).pretty()
+    /******************************************************************************
+ *  11. Mostrar la cantidad de resultados de la búsqueda anterior : 35
+ ********************************************************************************/
+ db.films.aggregate([{$unwind: "$cast"}, {$match: {"cast.character" : "Stormtrooper"}},  {$project: {original_title: 1, "actor": "$cast.name", "personaje":"$cast.character"}}, {$count: "personaje"}])
+    /******************************************************************************
+ *  12. Mostrar sólo los actores del punto 10, sin repetir actores.
+ ********************************************************************************/
+ No entendí el enunciado, el 10 no repite actores 
