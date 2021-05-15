@@ -1,0 +1,137 @@
+//CLIENTE
+{
+   "tipo":[
+      "cliente"
+   ],
+   "apellido":"Passucci",
+   "nombre":"Alan",
+   "dni":30293847,
+   "telefono":1183947263,
+   "domicilios":[
+      {
+         "direccion":"COORDENADAS GPS",
+         "localidad":{
+            "codigo":1088,
+            "descripcion":"Temperley"
+         },
+         "planes":[
+            {
+               "nombre":"SuperPack2",
+               "fecha":"10/02/2021",
+               "cantidadCanales":1,
+               "canales":[
+                  {
+                     "numero":1,
+                     "descripcion":"Star Channel"
+                  }
+               ],
+               "precio":800,
+               "situacion":"alta"
+            },
+            {
+               "nombre":"SuperPack2",
+               "fecha":"10/02/2007",
+               "cantidadCanales":1,
+               "canales":[
+                  {
+                     "numero":1,
+                     "descripcion":"Telefe"
+                  }
+               ],
+               "precio":600,
+               "situacion":"baja"
+            }
+         ]
+      },
+      {
+         "direccion":"COORDENADAS GPS",
+         "localidad":{
+            "codigo":1088,
+            "descripcion":"Temperley"
+         },
+         "planes":[
+            {
+               "nombre":"SuperPack2",
+               "fecha":"10/02/2007",
+               "cantidadCanales":1,
+               "canales":[
+                  {
+                     "numero":1,
+                     "descripcion":"Telefe"
+                  }
+               ],
+               "precio":600,
+               "situacion":"baja"
+            }
+         ]
+      }
+   ]
+}
+
+//TICKETS
+{
+   "id":2,
+   "fecha":"11/05/2021",
+   "hora":"13:30PM",
+   "motivo":"desperfecto",
+   "descripcion":"sin senial",
+   "area":"servicio técnico",
+   "estado":"tomado",
+   "domicilio":{
+      "direccion":"COORDENADAS GPS",
+      "localidad":{
+         "codigo":1088,
+         "descripcion":"Temperley"
+      }
+   }
+    cliente: //OBJETO CLIENTE
+    empleado: //OBJETO EMPLEADO
+    centro: //OBJETO DE CENTRO FISICO
+}
+
+//EMPLEADO
+{
+   "tipo":[
+      "empleado",
+      "servicioTecnico"
+   ],
+   "apellido":"Murray",
+   "nombre":"Demian",
+   "dni":30792837,
+   "telefono":1149234599,
+   "direccion":"COORDENADAS GPS",
+   "localidad":{
+      "codigo":1094,
+      "descripcion":"Lanus"
+   },
+   "central":"Fibortol Lanús"
+}
+
+
+//PLAN, varian pero el cliente se queda con el que adquirió en su momento
+{
+	nombre: "SuperPack2",
+	cantidadCanales: 2,
+	canales:[
+		{
+			numero: 1,
+			descripcion: "Star Channel"
+		},
+		{
+			numero:2,
+			descripcion: "Telefé"
+		}
+	],
+	precio: 500
+}
+
+//CENTRO SERVICIO 
+{
+	nombre: "Fibortol Lanús",
+	tipoCentro: "servicio técnico",
+   "direccion":"COORDENADAS GPS",
+    localidad: {
+    	codigo : 1094,
+    	descripcion : "Lanus"
+    }
+}
