@@ -34,8 +34,6 @@ db.films.aggregate([{$match: {original_language : "it"}}, {$project: {original_t
  * 8. Mostrar el _id, title, y crear un campo de nombre cantidad con la cantidad de elementos en el array cast de las peliculas en espanol.
  ********************************************************************************/
   db.films.aggregate([{$match: {original_language : "es"}}, {$project: {_id : 1, title: 1, "cantidad": {$size: "$cast"}}}]).pretty()
-  
-  db.films.aggregate([{$match:{original_language:"es"}},{$project:{_id:1,title:1,cantidad:{$size:"$cast"}}}]).pretty();
   /******************************************************************************
  * 9. Buscar la película con _id 58fa4a7799315a42d17d2b50 y mostrar, el titulo, original_title, actor con el valor de cast.name y personaje con el valor de
   cast.character de cada elemento del array cast. Mostrar un documento por cada elemento que contenga el array.
@@ -52,4 +50,64 @@ db.films.aggregate([{$match: {original_language : "it"}}, {$project: {original_t
     /******************************************************************************
  *  12. Mostrar sólo los actores del punto 10, sin repetir actores.
  ********************************************************************************/
- No entendí el enunciado, el 10 no repite actores 
+db.films.aggregate([{$unwind:"$cast"},{$match:{"cast.character":"Stormtrooper"}},{$project:{original_title:1,"actor":"$cast.name"}},{$group:{_id:{actor:"$actor"}}}]).pretty()
+
+
+
+
+
+---------------------EJERCICIOS GEOSPHERE-----------------
+
+/*
+	Ejercicios geo-espaciales.
+	Morel, Melany Lucía.
+*/
+
+//1. Crear índices 2dsphere en las colecciones: containers, oceans, ships,
+//countries y wines.
+
+containers.createIndex({geometry:'2dsphere'})
+oceans.createIndex({geometry:'2dsphere'})
+ships.createIndex({geometry:'2dsphere'})
+countries.createIndex({geometry:'2dsphere'})
+wines.createIndex({geometry:'2dsphere'})
+
+//2. Encontrar el nombre del país en el que está contenido el punto lat -2.112018,
+//lng 9.748100.
+
+db.countries.find({geometry:{$geoIntersects:{$geometry:{type:"Point",coordinates:[9.748100,-2.112018]}}}},{"properties.name":1}) //Gabon
+
+//3. Encontrar cuantas bodegas existen a 200 kilómetros del punto
+//-58.5737513, -34.6156537.
+
+db.wines.find({geometry: {$near:{$geometry:{type : "Point", coordinates : [-58.5737513, -34.6156537], $maxDistance: 2000}}}},{"properties.name":1}).count() //1083
+
+//4. Contar cuántas bodegas existen en el polígono dado. .
+
+db.wines.find({ geometry:{ $geoWithin: { $geometry:{type : "Polygon", coordinates : [[[-51, -29], [-71, -29], [-71,-33], [-51, -33],[-51, -29]]]}}}}, {"properties.name":1}).count() //10
+
+//5. Encontrar el nombre del mar/océano del punto
+//[82.19970703125, 8.559293903302025].
+
+db.oceans.find({ geometry: { $geoIntersects: { $geometry: { type: "Point", coordinates: [82.19970703125, 8.559293903302025]}}}}, {name:1}) //Bay of Bengal
+
+//6. Calcular cuántos barcos se encuentran a una distancia de 60 kilómetros del
+//barco de nombre "MSC Zoe" que hayan sido construidos después del 2014.
+
+db.ships.createIndex(location:"2dsphere")
+
+var barco = db.ships.findOne({Name:"MSC Zoe"})
+db.ships.find({location:{$near:{$geometry:barco.location,$maxDistance:60000}}},{Built:{$gt:2014}}).count() //1
+
+//7. Contar cuantos containers hay en "Philippine Sea"
+
+db.containers.createIndex(location:"2dsphere")
+
+var sea = db.oceans.findOne({name:"Philippine Sea"})
+
+db.containers.find({location:{$geoWithin:{$geometry:sea.geometry}}}).count() //39172
+//8. Calcular los barcos suizos que están en el océano pacifico sur y sean
+//de nacionalidad Suiza o Kuwaití.
+
+var oceanoPacificoSur = db.oceans.findOne({name:"SOUTH PACIFIC OCEAN"})
+db.ships.find({ location:{ $geoWithin: { $geometry: oceanoPacificoSur.geometry}}}, {$or : [{Country:"Kuwait"}, {Country:"Switzerland"}]}).count() //21
