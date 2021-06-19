@@ -60,6 +60,8 @@ db.ships.aggregate([
     }
 ]);
 */
+
+
 //4. Calcular la cantidad de contenedores que transporta el buque “MSC Zoe”.
 /*
 printjson(db.ships.aggregate([
